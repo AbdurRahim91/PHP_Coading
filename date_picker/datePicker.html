@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Picker Form</title>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+</head>
+<body>
+    <div class="date-picker">
+        <form action="get_date_by_postMethod.php" method="POST">
+            <label for="datepicker">Select a date:</label>
+            <input type="text" id="datepicker" name="date" class="datepicker-input">
+            <input type="submit" name="submit" >
+         </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+       $(document).ready(function() {
+    // Calculate the date range
+    var today = new Date();
+    var nextTenDays = new Date();
+    nextTenDays.setDate(today.getDate() + 10);
+
+    // Initialize datepicker
+    $('#datepicker').datepicker({
+        dateFormat: 'yy-mm-dd', // Change the format as needed
+        minDate: -1, // Disable the past all days
+        maxDate: nextTenDays, // Enable only the next 10 days
+        beforeShowDay: function(date) {
+            var enabledDates = [today]; // Include today to enable it
+            for (var i = 1; i < 10; i++) {
+                var nextDay = new Date();
+                nextDay.setDate(today.getDate() + i);
+                enabledDates.push(nextDay);
+            }
+
+            var stringDate = $.datepicker.formatDate('yy-mm-dd', date);
+            if (enabledDates.some(d => $.datepicker.formatDate('yy-mm-dd', d) === stringDate)) {
+                return [true];
+            }
+            return [false];
+        },
+        onSelect: function(dateText) {
+            console.log('Selected date:', dateText); // You can customize the action here
+        }
+    });
+});
+
+    </script>
+</body>
+</html>
